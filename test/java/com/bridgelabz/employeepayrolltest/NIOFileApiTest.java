@@ -1,4 +1,4 @@
-package com.bridgelabz.employepayrollservice;
+package com.bridgelabz.employeepayrolltest;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,6 +8,9 @@ import java.util.stream.IntStream;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.bridgelabz.employepayrollservice.FileUtils;
+import com.bridgelabz.employepayrollservice.WatchServiceExample;
 
 public class NIOFileApiTest 
 {
@@ -45,10 +48,18 @@ public class NIOFileApiTest
 		
 		//create stream of files in directory playPath. Then among these filter the files that are regular (Not hidden etc)
 		//For each of those files, print their names.
-		Files.list(playPath).filter(Files::isRegularFile);//.forEach(System.out::println);
+		Files.list(playPath).filter(Files::isRegularFile).forEach(System.out::println);
 		//Files.newDirectoryStream(playPath).forEach(System.out::println); ANOTHER WAY TO PRINT FILES IN A DIRECTORY.
-		Files.newDirectoryStream(playPath, path -> path.toFile().
-				isFile() && path.toString().startsWith("temp")).
+		Files.newDirectoryStream(playPath, path -> path.toFile().isFile() && 
+				path.toString().startsWith("temp")).
 				forEach(System.out::println);//NOT WORKING
+	}
+	
+	@Test
+	public void givenADirectory_whenWatched_listsAllTheActivities() throws IOException
+	{
+		Path dir = Paths.get(HOME+"/"+PLAY_WITH_NIO);
+		Files.list(dir).filter(Files::isRegularFile).forEach(System.out::println);
+		new WatchServiceExample(dir).processEvents();
 	}
 }
